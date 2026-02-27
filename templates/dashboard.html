@@ -29,24 +29,76 @@ body {
     color: #1a1a1a;
 }
 
-/* MAIN WRAPPER */
-.wrapper {
+/* MAIN WRAPPER */.wrapper {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-width: 1000px;
-    margin: 0 auto;
-    width: 100%;
+
+    margin-left: 260px;        /* sidebar width */
+    width: calc(100% - 260px); /* fill remaining space */
+
+    max-width: 100%;           /* remove limit */
 }
 
-/* HEADER */
 header {
-    padding: 12px 20px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  background-color: var(--background-light);
+  padding: 20px 32px 20px 0; /* remove left padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+/* --- SEARCH BAR (EXACT STYLE) --- */
+.search-bar {
+  background-color: var(--card-white);
+  border: 1px solid var(--border-light);
+  border-radius: 9999px;
+
+  padding: 12px 18px;
+  width: 520px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--text-gray);
+
+  margin-left: 0;      /* keeps it beside sidebar */
+}
+
+/* search icon */
+.search-bar i {
+  font-size: 18px;
+  color: var(--text-gray);
+}
+
+/* input */
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+
+  font-size: 15px;
+  background: transparent;
+
+  color: var(--text-dark);
+}
+
+/* placeholder */
+.search-bar input::placeholder {
+  color: var(--text-gray);
+}
+header {
+  background-color: var(--background-light);
+  padding: 20px 32px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
 
 .user-nav {
     display: flex;
@@ -305,6 +357,18 @@ header {
     background: #d0d7de;
     border-radius: 10px;
 }
+.sidebar {
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.search-bar {
+    margin-left: 0;
+}
+
 </style>
 </head>
 <body>
@@ -351,22 +415,35 @@ header {
       </ul>
     </aside>
 
-    <div class="wrapper">
-        <header>
-            <div class="user-nav">
-                <i class="ph ph-bell" style="font-size: 22px; color: var(--text-gray); cursor: pointer;"></i>
-                <div class="profile-info">
-                    <b id="session-name">Mansi Lande</b>
-                    <span id="session-email">mansilande1307@gmail.com</span>
-                </div>
-                <img src="" class="avatar" id="session-avatar">
-            </div>
-        </header>
+   <div class="wrapper">
 
-        <div class="content">
-            <div class="overview-header">
-                <h1>Overview</h1>
+    <header>
+
+       
+        <!-- CENTER SEARCH -->
+        <div class="search-bar">
+    <i class="ph ph-magnifying-glass"></i>
+    <input type="text" placeholder="Search...">
+  </div>
+
+        <!-- RIGHT PROFILE -->
+        <div class="user-nav">
+            <i class="ph ph-bell"></i>
+
+            <div class="profile-info">
+                <b id="session-name">Mansi Lande</b>
+                <span id="session-email">mansilande1307@gmail.com</span>
             </div>
+
+            <img src="" class="avatar" id="session-avatar">
+        </div>
+
+    </header>
+
+    <div class="content">
+        <div class="overview-header">
+            <h1>Overview</h1>
+        </div>
 
 
 

@@ -368,24 +368,33 @@
 
     <div class="menu-label">MENU</div>
 
-    <ul class="nav-list">
-        <li class="nav-item active" onclick="window.location.href='/dashboard'">
-        <i class="ph ph-squares-four"></i> <span>Overview</span>
-    </li>
+   <ul class="nav-list">
 
-    <li class="nav-item" onclick="window.location.href='/'">
-        <i class="ph ph-sparkle"></i> <span>Ask AI</span>
-    </li>
+<li class="nav-item {{ 'active' if request.path == '/dashboard' else '' }}"
+    onclick="window.location.href='/dashboard'">
+    <i class="ph ph-squares-four"></i>
+    <span>Overview</span>
+</li>
 
-    <li class="nav-item" onclick="window.location.href='/history'">
-        <i class="ph ph-clock-counter-clockwise"></i> <span>Query History</span>
-    </li>
+<li class="nav-item {{ 'active' if request.path == '/' else '' }}"
+    onclick="window.location.href='/'">
+    <i class="ph ph-sparkle"></i>
+    <span>Ask AI</span>
+</li>
 
-    <li class="nav-item" onclick="window.location.href='/templates_page'">
-        <i class="ph ph-copy-simple"></i> <span>Templates</span>
-    </li>
+<li class="nav-item {{ 'active' if request.path == '/history' else '' }}"
+    onclick="window.location.href='/history'">
+    <i class="ph ph-clock-counter-clockwise"></i>
+    <span>Query History</span>
+</li>
 
-    </ul>
+<li class="nav-item {{ 'active' if request.path == '/templates_page' else '' }}"
+    onclick="window.location.href='/templates_page'">
+    <i class="ph ph-copy-simple"></i>
+    <span>Templates</span>
+</li>
+
+</ul>
 
      <!-- GENERAL SECTION -->
     <div class="menu-label" style="margin-top: 20px">GENERAL</div>
