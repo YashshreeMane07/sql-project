@@ -1,0 +1,137 @@
+{
+  "students": [
+    "student_id",
+    "enrollment_no",
+    "first_name",
+    "last_name",
+    "dob",
+    "gender",
+    "email",
+    "phone",
+    "department",
+    "program",
+    "admission_year",
+    "current_semester",
+    "status",
+    "created_at"
+  ],
+  "faculty": [
+    "faculty_id",
+    "first_name",
+    "last_name",
+    "email",
+    "phone",
+    "department",
+    "designation",
+    "joining_date",
+    "salary",
+    "status"
+  ],
+  "courses": [
+    "course_id",
+    "course_code",
+    "course_name",
+    "credits",
+    "department",
+    "semester"
+  ],
+  "student_course_enrollment": [
+    "enrollment_id",
+    "student_id",
+    "course_id",
+    "semester",
+    "academic_year",
+    "status"
+  ],
+  "attendance": [
+    "attendance_id",
+    "student_id",
+    "course_id",
+    "attendance_date",
+    "status"
+  ],
+  "exams": [
+    "exam_id",
+    "course_id",
+    "exam_type",
+    "max_marks",
+    "exam_date"
+  ],
+  "results": [
+    "result_id",
+    "exam_id",
+    "student_id",
+    "marks_obtained",
+    "grade",
+    "grade_point"
+  ],
+  "fees": [
+    "fee_id",
+    "student_id",
+    "semester",
+    "total_amount",
+    "amount_paid",
+    "due_date",
+    "status"
+  ],
+  "fee_payments": [
+    "payment_id",
+    "fee_id",
+    "payment_mode",
+    "transaction_reference",
+    "payment_date",
+    "amount"
+  ],
+  "hostel": [
+    "hostel_id",
+    "hostel_name",
+    "capacity"
+  ],
+  "hostel_rooms": [
+    "room_id",
+    "hostel_id",
+    "room_number",
+    "room_type",
+    "capacity"
+  ],
+  "hostel_allocation": [
+    "allocation_id",
+    "student_id",
+    "room_id",
+    "allocation_date",
+    "checkout_date"
+  ],
+  "library_books": [
+    "book_id",
+    "isbn",
+    "title",
+    "author",
+    "publisher",
+    "total_copies",
+    "available_copies"
+  ],
+  "book_issues": [
+    "issue_id",
+    "book_id",
+    "student_id",
+    "issue_date",
+    "due_date",
+    "return_date",
+    "fine_amount"
+  ],
+  "user_accounts": [
+    "user_id",
+    "username",
+    "password_hash",
+    "role",
+    "linked_id",
+    "last_login"
+  ],
+  "audit_logs": [
+    "log_id",
+    "user_id",
+    "action",
+    "ip_address",
+    "action_time"
+  ]
+}

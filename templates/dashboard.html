@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatSQL | Business Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <style>
+:root {
+    --primary-green: #0d4a33;
+    --accent-green: #1e8f5b;
+    --bg-light: #f6f8fa;
+    --border: #e6eaef;
+    --text-gray: #6c757d;
+    --white: #ffffff;
+}
+
+/* BASE */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-light);
+    color: #1a1a1a;
+}
+
+/* MAIN WRAPPER */
+.wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* HEADER */
+header {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-info {
+    text-align: right;
+    border-left: 1px solid var(--border);
+    padding-left: 16px;
+}
+
+.profile-info b {
+    font-size: 13px;
+    color: var(--primary-green);
+}
+
+.profile-info span {
+    font-size: 11px;
+    color: var(--text-gray);
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+}
+
+/* CONTENT */
+.content {
+    padding: 10px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* HEADINGS */
+.overview-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--primary-green);
+}
+
+.greeting-section h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.greeting-section p {
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+/* DB STATUS */
+.db-status-pill {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-green);
+    background: #e8f5ee;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+/* QUICK ACTIONS */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.action-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-card:hover {
+    border-color: var(--accent-green);
+    background: #f0fdf4;
+}
+
+.action-icon {
+    width: 34px;
+    height: 34px;
+    background: #e8f5ee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-text b {
+    font-size: 12px;
+}
+
+.action-text span {
+    font-size: 11px;
+    color: var(--text-gray);
+}
+
+/* KPI */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.kpi-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.kpi-icon {
+    width: 38px;
+    height: 38px;
+    background: #e8f5ee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kpi-meta span {
+    font-size: 10px;
+    color: #888;
+    font-weight: 600;
+}
+
+.kpi-meta h2 {
+    font-size: 18px;
+    margin: 0;
+    color: var(--primary-green);
+}
+
+/* INFO GRID */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.access-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.note-card {
+    background: var(--primary-green);
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+/* PANELS */
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.panel-header {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--primary-green);
+}
+
+/* ANALYTICS */
+.analytics-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+}
+
+/* LIST ITEMS */
+.query-log-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.query-log-item b {
+    font-size: 10px;
+    color: var(--text-gray);
+}
+
+.query-log-item span {
+    font-size: 12px;
+}
+
+/* USERS */
+.user-list-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-initials {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+.status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: #e8f5ee;
+    color: var(--accent-green);
+}
+
+/* PROGRESS */
+.progress-bar {
+    height: 5px;
+    background: #edf2f7;
+    border-radius: 8px;
+    margin-top: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent-green);
+    width: 65%;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d0d7de;
+    border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+           <img src="{{ url_for('static', filename='sql_logo.png') }}" 
+     alt="Logo" 
+     class="brand-logo-img">
+            
+        </div>
+        <div class="menu-label">MENU</div>
+        <ul class="nav-list">
+
+    <li class="nav-item active" onclick="window.location.href='/dashboard'">
+        <i class="ph ph-squares-four"></i> <span>Overview</span>
+    </li>
+
+   <li class="nav-item" onclick="window.location.href='/ask_page'">
+    <i class="ph ph-sparkle"></i> <span>Ask AI</span>
+</li>
+
+    <li class="nav-item" onclick="window.location.href='/history'">
+        <i class="ph ph-clock-counter-clockwise"></i> <span>Query History</span>
+    </li>
+
+    <li class="nav-item" onclick="window.location.href='/templates_page'">
+        <i class="ph ph-copy-simple"></i> <span>Templates</span>
+    </li>
+
+</ul>
+        <div class="menu-label" style="margin-top: 20px">GENERAL</div>
+       <ul class="nav-list">
+        <li class="nav-item"><i class="ph ph-user"></i><span>Profile</span></li>
+        <li class="nav-item">
+          <i class="ph ph-book"></i><span>Help/Tutorial</span>
+        </li>
+        <li class="nav-item">
+          <i class="ph ph-gear"></i><span>Settings</span>
+        </li>
+        <li class="nav-item" onclick="handleLogout()">
+    <i class="ph ph-sign-out"></i><span>Logout</span>
+</li>
+      </ul>
+    </aside>
+
+    <div class="wrapper">
+        <header>
+            <div class="user-nav">
+                <i class="ph ph-bell" style="font-size: 22px; color: var(--text-gray); cursor: pointer;"></i>
+                <div class="profile-info">
+                    <b id="session-name">Mansi Lande</b>
+                    <span id="session-email">mansilande1307@gmail.com</span>
+                </div>
+                <img src="" class="avatar" id="session-avatar">
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="overview-header">
+                <h1>Overview</h1>
+            </div>
+
+
+
+
+
+            <div class="greeting-section">
+                <div class="db-status-pill">
+                    <i class="ph ph-check-circle-fill"></i> DB: University_erp | Latency: 14ms
+                </div>
+                <h1 id="welcome-msg">Hello!</h1>
+                <p>Welcome back to your data workspace.</p>
+            </div>
+
+            <div class="quick-actions-grid">
+             <div class="action-card" onclick="window.location.href='/'">
+                    <div class="action-icon"><i class="ph ph-sparkle"></i></div>
+                    <div class="action-text"><b>New Query</b><span>Ask AI anything</span></div>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon"><i class="ph ph-file-arrow-down"></i></div>
+                    <div class="action-text"><b>Export</b><span>Latest CSV/JSON</span></div>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon"><i class="ph ph-database"></i></div>
+                    <div class="action-text"><b>Schema</b><span>Browse tables</span></div>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon"><i class="ph ph-users"></i></div>
+                    <div class="action-text"><b>Team</b><span>Manage access</span></div>
+                </div>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="ph ph-lightning"></i></div>
+                    <div class="kpi-meta"><span>Total Queries</span><h2 id="kpi-total">24</h2></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="ph ph-briefcase"></i></div>
+                    <div class="kpi-meta"><span>Department</span><h2 id="kpi-dept">---</h2></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="ph ph-shield-check"></i></div>
+                    <div class="kpi-meta"><span>Access Level</span><h2 id="kpi-role">---</h2></div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="access-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <span style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase;">Security</span>
+                        <div class="status-badge" style="background: #f1f3f5; color: var(--primary-green);">ENCRYPTED</div>
+                    </div>
+                    <span style="font-size: 13px; color: var(--text-gray);">Data Scope</span>
+                    <div style="font-size: 18px; font-weight: 700; color: var(--primary-green); margin-top: 4px;">Read-Only Mode</div>
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+                <div class="note-card">
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; opacity: 0.8;">System Announcement</span>
+                    <p>Team, your departmental access has been synced with the latest Q1 database schemas. 20 new insights are ready.</p>
+                </div>
+            </div>
+
+            <div class="analytics-row">
+                <div class="panel">
+                    <div class="panel-header">Query Activity Trend</div>
+                    <div style="height: 300px;"><canvas id="trendChart"></canvas></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">Recent Database Logs</div>
+                    <div id="recent-logs-list"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Currently Active on ChatSQL</div>
+                <div id="active-users-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const session = JSON.parse(localStorage.getItem("userSession")) || { 
+                name: "Mansi Lande", 
+                email: "mansilande1307@gmail.com", 
+                dept: "Management", 
+                role: "Admin" 
+            };
+
+            const onlineUsers = [
+                session,
+                { name: "Rahul Sharma", email: "rahul.s@chatsql.com", dept: "Engineering", role: "User" },
+                { name: "Sana Khan", email: "sana.k@chatsql.com", dept: "Analytics", role: "Manager" }
+            ];
+
+            document.getElementById("welcome-msg").innerText = `Hello, ${session.name.split(' ')[0]}!`;
+            document.getElementById("session-name").innerText = session.name;
+            document.getElementById("session-email").innerText = session.email;
+            document.getElementById("kpi-dept").innerText = session.dept;
+            document.getElementById("kpi-role").innerText = session.role;
+            document.getElementById("session-avatar").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(session.name)}&background=0d4a33&color=fff`;
+
+            const logContainer = document.getElementById("recent-logs-list");
+            const rawHistory = JSON.parse(localStorage.getItem("queryHistory")) || [];
+            const history = rawHistory.reverse().slice(0, 6);
+            
+            logContainer.innerHTML = "";
+            if (history.length === 0) {
+                logContainer.innerHTML = `<div style="padding: 15px; color: var(--text-gray); font-size: 13px;">No recent queries found.</div>`;
+            } else {
+                history.forEach(log => {
+                    logContainer.innerHTML += `
+                        <div class="query-log-item">
+                            <b>${log.time || 'Today'}</b>
+                            <span title="${log.question}">"${log.question}"</span>
+                        </div>`;
+                });
+            }
+
+            const userList = document.getElementById("active-users-list");
+            
+            // Palette of different greens
+            const greenShades = ["#0d4a33", "#1e8f5b", "#2d6a4f", "#40916c", "#52b788"];
+
+            onlineUsers.forEach((user, index) => {
+                const initials = user.name.split(' ').map(n => n[0]).join('');
+                // Assign shade based on index
+                const bgColor = greenShades[index % greenShades.length];
+                
+                userList.innerHTML += `
+                    <div class="user-list-item">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="user-initials" style="background-color: ${bgColor}">${initials}</div>
+                            <div>
+                                <b style="font-size: 13px; display: block;">${user.name}</b>
+                                <span style="font-size: 11px; color: var(--text-gray);">${user.dept}</span>
+                            </div>
+                        </div>
+                        <span class="status-badge">Online</span>
+                    </div>`;
+            });
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        data: [15, 22, 10, 18, 25, 12, 16],
+                        backgroundColor: '#1e8f5b',
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { beginAtZero: true, grid: { color: '#f0f0f0' } }, 
+                        x: { grid: { display: false } } 
+                    }
+                }
+            });
+        });
+
+        function handleLogout() {
+    localStorage.removeItem("userSession");
+    window.location.href = "/"; // go back to login page
+}
+    </script>
+</body>
+</html>
