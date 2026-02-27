@@ -184,9 +184,17 @@
 
 <script>
     // Logic remains identical to ensure functionality doesn't break
-    if (localStorage.getItem("userSession")) {
+   const session = localStorage.getItem("userSession");
+
+if (session) {
+    const user = JSON.parse(session);
+
+    if (user.role === "admin") {
+        window.location.href = "/admin_dashboard";
+    } else {
         window.location.href = "/dashboard";
     }
+}
 
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -202,14 +210,18 @@
 
         const result = await response.json();
 
-        if (result.success) {
-            localStorage.setItem("userSession", JSON.stringify(result.user));
-            window.location.href = "/dashboard";
-        } else {
-            const errorDiv = document.getElementById('errorMsg');
-            errorDiv.style.display = "block";
-            errorDiv.innerText = result.message;
-        }
+       if (result.success) {
+
+    localStorage.setItem("userSession", JSON.stringify(result.user));
+
+    // Redirect based on role
+    if (result.user.role === "admin") {
+        window.location.href = "/admin_dashboard";
+    } else {
+        window.location.href = "/dashboard";
+    }
+
+}
     });
 </script>
 </body>

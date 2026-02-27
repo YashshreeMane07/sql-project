@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+{% for table, rows in db_data.items() %}
+
+    <h2>{{ table }}</h2>
+
+    <table border="1">
+        <tr>
+            {% if rows %}
+                {% for column in rows[0].keys() %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            {% endif %}
+        </tr>
+
+        {% for row in rows %}
+        <tr>
+            {% for value in row.values() %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+
+{% endfor %}
+
+</body>
+</html>

@@ -3,6 +3,7 @@ from flask_cors import CORS
 import mysql.connector
 from pipeline_runner import run_pipeline
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -43,6 +44,35 @@ def templates_page():
 @app.route("/logout")
 def logout():
     return render_template("logout.html")
+
+@app.route("/admin_dashboard")
+def admin_dashboard():
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Get all tables
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+
+        db_data = {}
+
+        for table in tables:
+            table_name = list(table.values())[0]
+
+            cursor.execute(f"SELECT * FROM {table_name}")
+            rows = cursor.fetchall()
+
+            db_data[table_name] = rows
+
+        cursor.close()
+        conn.close()
+
+        return render_template("admin_dashboard.html", db_data=db_data)
+
+    except Exception as e:
+        return str(e)
 
 
 # ---------------- LOGIN API ----------------
@@ -134,8 +164,12 @@ def ask():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
 
 # ---------------- MAIN ----------------
 
 if __name__ == "__main__":
     app.run(debug=True, port=5501)
+
+    
