@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatSQL - User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+
+    <style>
+        :root {
+            --primary-green-dark: #0d4a33;
+            --primary-green-medium: #1e8f5b;
+            --primary-green-light: #d8f5e5;
+            --background-light: #f5f7f8;
+            --card-white: #ffffff;
+            --text-dark: #1a1d1f;
+            --text-gray: #6d737a;
+            --border-light: #e1e4e8;
+        }
+
+        /* --- PROFILE LAYOUT STYLES --- */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-bottom: 50px;
+        }
+
+        .profile-header-card {
+            background: var(--card-white);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .profile-identity {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .profile-avatar-large {
+            width: 90px;
+            height: 90px;
+            background: var(--primary-green-dark);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            border: 5px solid var(--primary-green-light);
+        }
+
+        .profile-info-text h1 {
+            font-size: 24px;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .profile-info-text p {
+            color: var(--text-gray);
+            margin: 4px 0 12px 0;
+            font-size: 15px;
+        }
+
+        .status-badge {
+            background: var(--primary-green-light);
+            color: var(--primary-green-dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Stats Grid */
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-card i {
+            font-size: 28px;
+            color: var(--primary-green-medium);
+            background: var(--primary-green-light);
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .stat-content .stat-value {
+            display: block;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-content .stat-label {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        /* Detailed Sections */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-box {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+
+        .detail-box h3 {
+            font-size: 16px;
+            color: var(--primary-green-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--primary-green-light);
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-row label { color: var(--text-gray); font-size: 14px; }
+        .info-row span { font-weight: 600; color: var(--text-dark); font-size: 14px; }
+
+        .btn-edit {
+            background: white;
+            border: 1px solid var(--primary-green-medium);
+            color: var(--primary-green-medium);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-edit:hover { background: var(--primary-green-light); }
+
+        .avatar-circle {
+            width: 40px; height: 40px;
+            background-color: var(--primary-green-dark);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; margin-left: 12px;
+            border: 2px solid var(--primary-green-light);
+        }
+
+        /* Header Layout adjustment for search removal */
+        header {
+            display: flex;
+            justify-content: flex-end; /* Align profile to the right */
+            padding: 15px 30px;
+            background: white;
+            border-bottom: 1px solid var(--border-light);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='sql_logo.png') }}" class="brand-logo-img">
+        </div>
+           <div class="menu-label">MENU</div>
+
+   <ul class="nav-list">
+
+<li class="nav-item {{ 'active' if request.path == '/dashboard' else '' }}"
+    onclick="window.location.href='/dashboard'">
+    <i class="ph ph-squares-four"></i>
+    <span>Overview</span>
+</li>
+
+<li class="nav-item {{ 'active' if request.path == '/' else '' }}"
+    onclick="window.location.href='/'">
+    <i class="ph ph-sparkle"></i>
+    <span>Ask AI</span>
+</li>
+
+<li class="nav-item {{ 'active' if request.path == '/history' else '' }}"
+    onclick="window.location.href='/history'">
+    <i class="ph ph-clock-counter-clockwise"></i>
+    <span>Query History</span>
+</li>
+
+<li class="nav-item {{ 'active' if request.path == '/templates_page' else '' }}"
+    onclick="window.location.href='/templates_page'">
+    <i class="ph ph-copy-simple"></i>
+    <span>Templates</span>
+</li>
+
+</ul>
+
+  <!-- GENERAL SECTION -->
+<div class="menu-label" style="margin-top: 20px">GENERAL</div>
+
+<ul class="nav-list">
+
+<li class="nav-item {{ 'active' if request.path == '/profile' else '' }}"
+    onclick="window.location.href='/profile'">
+    <i class="ph ph-user"></i>
+    <span>Profile</span>
+</li>
+
+<li class="nav-item {{ 'active' if request.path == '/help' else '' }}"
+    onclick="window.location.href='/help'">
+    <i class="ph ph-book"></i>
+    <span>Help/Tutorial</span>
+</li>
+
+<li class="nav-item {{ 'active' if request.path == '/settings' else '' }}"
+    onclick="window.location.href='/settings'">
+    <i class="ph ph-gear"></i>
+    <span>Settings</span>
+</li>
+
+<li class="nav-item"
+    onclick="handleLogout()">
+    <i class="ph ph-sign-out"></i>
+    <span>Logout</span>
+</li>
+
+</ul>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name" id="session-name">Loading...</div>
+                        <div class="user-email" id="session-email">...</div>
+                    </div>
+                    <div class="avatar-circle" id="user-initials">--</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="profile-container">
+                
+                <div class="profile-header-card">
+                    <div class="profile-identity">
+                        <div class="profile-avatar-large" id="main-avatar">--</div>
+                        <div class="profile-info-text">
+                            <h1 id="display-name">User Name</h1>
+                            <p id="display-email">user@example.com</p>
+                            <span class="status-badge">Professional Tier</span>
+                        </div>
+                    </div>
+                    <button class="btn-edit" onclick="openEditModal()"><i class="ph ph-pencil-simple"></i> Edit Profile</button>
+                </div>
+
+                <div class="profile-stats-grid">
+                    <div class="stat-card">
+                        <i class="ph ph-code"></i>
+                        <div class="stat-content">
+                            <span class="stat-value">1,284</span>
+                            <span class="stat-label">Total Queries</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ph ph-database"></i>
+                        <div class="stat-content">
+                            <span class="stat-value">MySQL</span>
+                            <span class="stat-label">Engine</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ph ph-star"></i>
+                        <div class="stat-content">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Saved Templates</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-box">
+                        <h3><i class="ph ph-database"></i> Database Environment</h3>
+                        <div class="info-row"><label>Active Database</label><span>University_erp</span></div>
+                        <div class="info-row"><label>SQL Dialect</label><span>MySQL 8.0</span></div>
+                        <div class="info-row"><label>Connection Port</label><span>3306</span></div>
+                        <div class="info-row"><label>SSL Status</label><span style="color: #1e8f5b;">Secure</span></div>
+                    </div>
+
+                    <div class="detail-box">
+                        <h3><i class="ph ph-cpu"></i> Assistant Preferences</h3>
+                        <div class="info-row"><label>AI Model</label><span>Ollama Deepseek coder 6.7</span></div>
+                        <div class="info-row"><label>Result Limit</label><span>1000 Rows</span></div>
+                        <div class="info-row"><label>Auto-Explain</label><span>Enabled</span></div>
+                        <div class="info-row"><label>Voice Input</label><span>Enabled</span></div>
+                    </div>
+
+                    <div class="detail-box">
+                        <h3><i class="ph ph-chart-line-up"></i> Usage Metrics</h3>
+                        <div class="info-row"><label>Queries Today</label><span>12 / 100</span></div>
+                        <div class="info-row"><label>Success Rate</label><span>98.2%</span></div>
+                        <div class="info-row"><label>Department</label><span id="display-dept">Engineering</span></div>
+                    </div>
+
+                    <div class="detail-box">
+                        <h3><i class="ph ph-shield-check"></i> Security</h3>
+                        <div class="info-row"><label>Role</label><span id="display-role">Admin</span></div>
+                        <div class="info-row"><label>Last Login</label><span>Just Now</span></div>
+                        <div class="info-row"><label>Password</label><span>••••••••</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadUserData();
+        });
+
+        function loadUserData() {
+            const session = JSON.parse(localStorage.getItem("userSession"));
+
+            if (!session || !session.name) {
+                window.location.href = "/";
+                return;
+            }
+
+            const fullName = session.name.trim();
+            const email = session.email || "No email provided";
+
+            document.getElementById("session-name").innerText = fullName;
+            document.getElementById("session-email").innerText = email;
+            document.getElementById("display-name").innerText = fullName;
+            document.getElementById("display-email").innerText = email;
+
+            document.getElementById("display-role").innerText = session.role || "User";
+            document.getElementById("display-dept").innerText = session.dept || "General";
+
+            const nameParts = fullName.split(" ").filter(n => n.length > 0);
+            let initials = nameParts.length >= 2 
+                ? nameParts[0][0] + nameParts[nameParts.length - 1][0] 
+                : nameParts[0][0];
+            
+            initials = initials.toUpperCase();
+            document.getElementById("user-initials").innerText = initials;
+            document.getElementById("main-avatar").innerText = initials;
+        }
+
+        function openEditModal() {
+            const session = JSON.parse(localStorage.getItem("userSession"));
+            
+            const newName = prompt("Enter new Full Name:", session.name);
+            if (newName && newName !== session.name) {
+                updateProfile(newName, session.email);
+            }
+        }
+
+        function updateProfile(newName, newEmail) {
+            let session = JSON.parse(localStorage.getItem("userSession"));
+            session.name = newName;
+            session.email = newEmail;
+            localStorage.setItem("userSession", JSON.stringify(session));
+            
+            alert("Profile updated in session successfully!");
+            loadUserData();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("userSession");
+            window.location.href = "/";
+        }
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

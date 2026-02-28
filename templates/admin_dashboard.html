@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,15 +28,7 @@
             overflow: hidden;
         }
 
-        /* --- Sidebar --- */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-        }
+       
 
         .logo {
             display: flex;
@@ -78,14 +70,29 @@
             color: var(--primary-green);
         }
 
-        .db-sub-item {
-            padding: 8px 16px 8px 45px;
-            font-size: 14px;
-            color: var(--text-gray);
-            cursor: pointer;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
+      .db-sub-item {
+    padding: 8px 16px 8px 45px;
+    font-size: 14px;
+    color: var(--text-gray);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.db-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 5px;
+}
+
 
         .db-sub-item:hover { color: var(--primary-green); background: #F9F9F9; }
 
@@ -191,7 +198,8 @@
             font-weight: 600;
         }
 .sidebar {
-    width: 260px;
+    width: 280px;          /* increase width */
+    min-width: 280px;      /* prevent shrinking */
     background: var(--sidebar-bg);
     border-right: 1px solid var(--border-light);
     display: flex;
@@ -199,7 +207,7 @@
     padding: 24px;
     
     height: 100vh;
-    overflow-y: auto;   /* ✅ ADD THIS */
+    overflow-y: auto;
 }
 
 .action-btn {
@@ -279,10 +287,22 @@
             <div id="table-{{ table }}" class="data-card table-view">
                 <div class="table-header">
                     <h2>{{ table }}</h2>
-                    <div>
-    <button onclick="addEntry('{{ table }}')" class="action-btn">+ Add</button>
-    <button onclick="updateEntry('{{ table }}')" class="action-btn">Update</button>
-    <button onclick="deleteEntry('{{ table }}')" class="action-btn" style="background:#FF4D4D;">Delete</button>
+                   <div>
+    <button
+    onclick="addEntryFromButton(this)"
+    data-table="{{ table }}"
+    data-columns='{{ table_columns[table] | tojson | safe }}'
+    class="action-btn">
+    Add
+</button>
+
+    <button onclick="updateEntry('{{ table }}')" class="action-btn">
+        Update
+    </button>
+
+    <button onclick="deleteEntry('{{ table }}')" class="action-btn" style="background:#FF4D4D;">
+        Delete
+    </button>
 </div>
                 </div>
                 <table>
@@ -295,16 +315,21 @@
                             {% endif %}
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for row in rows %}
-                        <tr>
-                            {% for value in row.values() %}
-                                <td>{{ value }}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                  <tbody id="tbody-{{ table }}">
+    {% for row in rows %}
+    <tr class="table-row-{{ table }}">
+        {% for value in row.values() %}
+            <td>{{ value }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</tbody>
                 </table>
+                <div style="margin-top:15px; text-align:center;">
+    <button onclick="prevPage('{{ table }}')" class="action-btn">Prev</button>
+    <span id="page-info-{{ table }}" style="margin:0 10px;"></span>
+    <button onclick="nextPage('{{ table }}')" class="action-btn">Next</button>
+</div>
             </div>
             {% endfor %}
 
@@ -317,20 +342,28 @@
 
     <script>
         function switchTable(tableName) {
-            // Hide welcome screen
-            document.getElementById('welcome-screen').style.display = 'none';
-            
-            // Hide all table cards
-            const cards = document.querySelectorAll('.table-view');
-            cards.forEach(card => card.style.display = 'none');
-            
-            // Show selected table
-            const selected = document.getElementById('table-' + tableName);
-            if (selected) {
-                selected.style.display = 'block';
-                document.getElementById('page-title').innerText = tableName + " Management";
-            }
-        }
+
+    // Hide welcome screen
+    document.getElementById('welcome-screen').style.display = 'none';
+    
+    // Hide all tables
+    const cards = document.querySelectorAll('.table-view');
+    cards.forEach(card => card.style.display = 'none');
+    
+    // Show selected table
+    const selected = document.getElementById('table-' + tableName);
+
+    if (selected) {
+
+        selected.style.display = 'block';
+
+        document.getElementById('page-title').innerText =
+            tableName + " Management";
+
+        // IMPORTANT: reset pagination to page 1
+        showPage(tableName, 1);
+    }
+}
 
         function logout() {
             localStorage.removeItem("userSession");
@@ -340,18 +373,191 @@
     const list = document.getElementById("dbList");
     list.style.display = list.style.display === "none" ? "block" : "none";
 }
-function addEntry(table) {
-    alert("Add entry to " + table);
-    // Later connect to Flask API
+
+
+// OPEN MODAL
+function openModal(action, table) {
+
+    document.getElementById("crudModal").style.display = "flex";
+
+    document.getElementById("crudTable").value = table;
+    document.getElementById("crudAction").value = action;
+
+    document.getElementById("modalTitle").innerText =
+        action.toUpperCase() + " Entry - " + table;
+
+    document.getElementById("columnName").value = "";
+    document.getElementById("columnValue").value = "";
 }
 
+// CLOSE MODAL
+function closeModal() {
+    document.getElementById("crudModal").style.display = "none";
+}
+
+
+function addEntryFromButton(btn) {
+
+    const table = btn.dataset.table;
+
+    const columns = JSON.parse(btn.dataset.columns);
+
+    addEntry(table, columns);
+}
+
+// BUTTON FUNCTIONS
+function addEntry(table, columns) {
+
+    document.getElementById("crudModal").style.display = "flex";
+
+    document.getElementById("crudTable").value = table;
+    document.getElementById("crudAction").value = "add";
+
+    document.getElementById("modalTitle").innerText =
+        "ADD Entry - " + table;
+
+    const container = document.getElementById("dynamicFields");
+
+    container.innerHTML = "";
+
+    columns.forEach(col => {
+
+        container.innerHTML += `
+            <div style="margin-top:10px;">
+                <label>${col}</label>
+                <input type="text" name="${col}" required style="width:100%; padding:8px;">
+            </div>
+        `;
+    });
+}
 function updateEntry(table) {
-    alert("Update entry in " + table);
+    openModal("update", table);
 }
 
 function deleteEntry(table) {
-    alert("Delete entry from " + table);
+    openModal("delete", table);
 }
+
+
+// SUBMIT FORM
+// SUBMIT FORM PROPERLY
+window.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("crudForm");
+
+    if (!form) return;
+
+    form.onsubmit = async function(e) {
+
+        e.preventDefault();
+
+        const table = document.getElementById("crudTable").value;
+        const action = document.getElementById("crudAction").value;
+
+        const formData = {};
+
+        document.querySelectorAll("#dynamicFields input")
+        .forEach(input => {
+            formData[input.name] = input.value;
+        });
+
+        const response = await fetch("/api/crud", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                table: table,
+                action: action,
+                data: formData
+            })
+        });
+
+        const result = await response.json();
+
+        alert(result.message);
+
+        closeModal();
+        location.reload();
+    };
+
+});
+const rowsPerPage = 6;
+
+const tablePages = {};
+
+function showPage(table, page) {
+
+    const rows = document.querySelectorAll(".table-row-" + table);
+
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    if (totalPages === 0) return;
+
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+
+    tablePages[table] = page;
+
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    rows.forEach((row, index) => {
+
+        if (index >= start && index < end)
+            row.style.display = "table-row";
+        else
+            row.style.display = "none";
+
+    });
+
+    document.getElementById("page-info-" + table).innerText =
+        "Page " + page + " of " + totalPages;
+}
+function nextPage(table) {
+    showPage(table, (tablePages[table] || 1) + 1);
+}
+
+function prevPage(table) {
+    showPage(table, (tablePages[table] || 1) - 1);
+}
+
+window.onload = function () {
+
+    const tables = document.querySelectorAll("[id^='table-']");
+
+    tables.forEach(tableDiv => {
+
+        const tableName = tableDiv.id.replace("table-", "");
+
+        showPage(tableName, 1);
+
+    });
+
+};
     </script>
+    <!-- CRUD MODAL -->
+<div id="crudModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); justify-content:center; align-items:center; z-index:999;">
+
+    <div style="background:white; padding:25px; border-radius:12px; width:400px;">
+
+        <h3 id="modalTitle">Add Entry</h3>
+
+        <form id="crudForm">
+
+    <input type="hidden" id="crudTable">
+    <input type="hidden" id="crudAction">
+
+    <div id="dynamicFields"></div>
+
+            <div style="margin-top:20px; text-align:right;">
+                <button type="button" onclick="closeModal()" style="margin-right:10px;">Cancel</button>
+                <button type="submit" class="action-btn">Submit</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
 </body>
 </html>

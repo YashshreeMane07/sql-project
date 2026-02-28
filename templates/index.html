@@ -9,10 +9,12 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/phosphor-icons"></script>
   
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="https://unpkg.com/phosphor-icons"></script>
       <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
@@ -134,12 +136,13 @@
       }
 
       .modal-card {
-        background: white;
-        width: 300px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      }
+  background: white;
+  width: 420px;     /* BIG box */
+  max-width: 90%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
 
       .modal-header {
         background: var(--primary-green-dark);
@@ -149,19 +152,14 @@
         text-align: center;
       }
 
-      .option-btn {
-        display: block;
-        width: 100%;
-        padding: 15px 20px;
-        border: none;
-        background: none;
-        text-align: left;
-        font-size: 14px;
-        cursor: pointer;
-        border-bottom: 1px solid var(--border-light);
-        color: var(--text-dark);
-      }
-
+     .option-btn {
+  display: block;
+  width: 100%;
+  padding: 20px 25px;
+  font-size: 18px;
+  cursor: pointer;
+  border-bottom: 1px solid #e1e4e8;
+}
       .option-btn:last-child {
         border-bottom: none;
       }
@@ -288,12 +286,13 @@
         align-items: center;
       }
 
-      .modal-header button {
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-      }
+     #explanationModal .modal-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: white;
+}
 
       .modal-body {
         margin-top: 15px;
@@ -313,25 +312,182 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Voice recording popup */
+.voice-record-card {
+  background: white;
+  padding: 50px 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 420px;          /* BIG width */
+  max-width: 90%;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+  animation: popupScale 0.25s ease;
+}
+
+@keyframes popupScale {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.voice-icon {
+  font-size: 90px;      /* BIG mic */
+  color: #1e8f5b;
+  margin-bottom: 20px;
+  animation: micPulse 1.2s infinite;
+}
+
+@keyframes micPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.voice-text {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* animated bars */
+.voice-animation {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.voice-animation span {
+  width: 10px;
+  height: 35px;
+  background: #1e8f5b;
+  border-radius: 6px;
+  animation: voiceWave 1s infinite ease-in-out;
+}
+
+.voice-animation span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.voice-animation span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes voiceWave {
+  0%,100% { height: 20px; }
+  50% { height: 40px; }
+}
+
+.voice-stop-btn {
+  background: #1e8f5b;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Bigger modal */
+#exportModal {
+  width: 520px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Export buttons */
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 22px;
+  font-size: 20px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Icon */
+.export-icon {
+  font-size: 28px;
+  color: #0d4a33;
+}
+
+/* Hover effect */
+.export-btn:hover {
+  background: #d8f5e5;
+  transform: scale(1.02);
+}
+
+/* Click effect */
+.export-btn:active {
+  transform: scale(0.98);
+}
+
+.viz-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 22px;
+  font-size: 20px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  transition: 0.25s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.viz-btn:hover {
+  background: #d8f5e5;
+  transform: scale(1.02);
+}
+
+.viz-icon {
+  font-size: 28px;
+  color: #0d4a33;
+}
     </style>
 
   </head>
   
   <body>
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-      <!-- EXPORT MODAL -->
-      <div
-        class="modal-card"
-        id="exportModal"
-        onclick="event.stopPropagation()"
-        style="display: none"
-      >
-        <div class="modal-header">Export Data By</div>
-        <button class="option-btn" onclick="exportData('csv')">CSV</button>
-<button class="option-btn" onclick="exportData('pdf')">PDF</button>
-<button class="option-btn" onclick="exportData('excel')">Excel</button>
-<button class="option-btn" onclick="exportData('json')">JSON</button>
-      </div>
+     <div class="modal-card" id="exportModal">
+
+  <div class="modal-header">
+    Export Data By
+  </div>
+
+  <button class="export-btn" onclick="exportData('csv')">
+    <i class="ph ph-file-csv export-icon"></i>
+    <span>CSV</span>
+  </button>
+
+  <button class="export-btn" onclick="exportData('pdf')">
+    <i class="ph ph-file-pdf export-icon"></i>
+    <span>PDF</span>
+  </button>
+
+  <button class="export-btn" onclick="exportData('excel')">
+    <i class="ph ph-file-xls export-icon"></i>
+    <span>Excel</span>
+  </button>
+
+  <button class="export-btn" onclick="exportData('json')">
+    <i class="ph ph-brackets-curly export-icon"></i>
+    <span>JSON</span>
+  </button>
+
+</div>
 
       <!-- VISUALIZE MODAL -->
       <div
@@ -341,18 +497,25 @@
         style="display: none"
       >
         <div class="modal-header">Visualize Data By</div>
-        <button class="option-btn" onclick="renderChart('bar')">
-          Bar Chart
-        </button>
-        <button class="option-btn" onclick="renderChart('line')">
-          Line Chart
-        </button>
-        <button class="option-btn" onclick="renderChart('pie')">
-          Pie Chart
-        </button>
-        <button class="option-btn" onclick="renderChart('histogram')">
-          Histogram
-        </button>
+        <button class="viz-btn" onclick="renderChart('bar')">
+  <i class="ph ph-chart-bar viz-icon"></i>
+  <span>Bar Chart</span>
+</button>
+
+<button class="viz-btn" onclick="renderChart('line')">
+  <i class="ph ph-chart-line viz-icon"></i>
+  <span>Line Chart</span>
+</button>
+
+<button class="viz-btn" onclick="renderChart('pie')">
+  <i class="ph ph-chart-pie viz-icon"></i>
+  <span>Pie Chart</span>
+</button>
+
+<button class="viz-btn" onclick="renderChart('histogram')">
+  <i class="ph ph-chart-bar-horizontal viz-icon"></i>
+  <span>Histogram</span>
+</button>
       </div>
     </div>
 
@@ -396,26 +559,36 @@
 
 </ul>
 
-     <!-- GENERAL SECTION -->
-    <div class="menu-label" style="margin-top: 20px">GENERAL</div>
+  <!-- GENERAL SECTION -->
+<div class="menu-label" style="margin-top: 20px">GENERAL</div>
 
-    <ul class="nav-list">
-        <li class="nav-item">
-            <i class="ph ph-user"></i><span>Profile</span>
-        </li>
+<ul class="nav-list">
 
-        <li class="nav-item">
-            <i class="ph ph-book"></i><span>Help/Tutorial</span>
-        </li>
+<li class="nav-item {{ 'active' if request.path == '/profile' else '' }}"
+    onclick="window.location.href='/profile'">
+    <i class="ph ph-user"></i>
+    <span>Profile</span>
+</li>
 
-        <li class="nav-item">
-            <i class="ph ph-gear"></i><span>Settings</span>
-        </li>
+<li class="nav-item {{ 'active' if request.path == '/help' else '' }}"
+    onclick="window.location.href='/help'">
+    <i class="ph ph-book"></i>
+    <span>Help/Tutorial</span>
+</li>
 
-        <li class="nav-item" onclick="handleLogout()">
-            <i class="ph ph-sign-out"></i><span>Logout</span>
-        </li>
-    </ul>
+<li class="nav-item {{ 'active' if request.path == '/settings' else '' }}"
+    onclick="window.location.href='/settings'">
+    <i class="ph ph-gear"></i>
+    <span>Settings</span>
+</li>
+
+<li class="nav-item"
+    onclick="handleLogout()">
+    <i class="ph ph-sign-out"></i>
+    <span>Logout</span>
+</li>
+
+</ul>
 </aside>
 
     <main class="main-content">
@@ -519,7 +692,10 @@
     </main>
     <script>
       let lastQueryData = [];
-      let chartInstance = null;
+let chartInstance = null;
+
+let currentPage = 1;
+let rowsPerPage = 6; // change if needed
 
       function openModal(id) {
         document.getElementById("modalOverlay").style.display = "flex";
@@ -625,19 +801,8 @@ document.getElementById("sqlOutput").innerHTML =
                 return;
             }
 
-            const cols = Object.keys(lastQueryData[0]);
-            let html = "<table class='data-table'><tr>";
-            cols.forEach((c) => (html += `<th>${c}</th>`));
-            html += "</tr>";
-
-            lastQueryData.forEach((row) => {
-                html += "<tr>";
-                cols.forEach((c) => (html += `<td>${row[c] !== null ? row[c] : 'NULL'}</td>`));
-                html += "</tr>";
-            });
-
-            html += "</table>";
-            container.innerHTML = "<h3>Query Result</h3>" + html;
+           currentPage = 1;
+renderTablePage();
         }
     })
     .catch(err => {
@@ -647,7 +812,84 @@ document.getElementById("sqlOutput").innerHTML =
     // Clear input field
     input.value = "";
 }
+function renderTablePage() {
 
+    const container = document.getElementById("tableResult");
+
+    if (!lastQueryData.length) {
+        container.innerHTML =
+            "<h3>Query Result</h3><div class='placeholder-text'>No data</div>";
+        return;
+    }
+
+    const cols = Object.keys(lastQueryData[0]);
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    const pageRows = lastQueryData.slice(start, end);
+
+    let html = "<table class='data-table'><tr>";
+
+    cols.forEach(col => {
+        html += `<th>${col}</th>`;
+    });
+
+    html += "</tr>";
+
+    pageRows.forEach(row => {
+        html += "<tr>";
+        cols.forEach(col => {
+            html += `<td>${row[col] ?? "NULL"}</td>`;
+        });
+        html += "</tr>";
+    });
+
+    html += "</table>";
+
+    const totalPages = Math.ceil(lastQueryData.length / rowsPerPage);
+
+    html += `
+        <div style="margin-top:15px;display:flex;gap:10px;align-items:center;">
+            <button onclick="prevPage()" ${currentPage===1?'disabled':''}>
+                Prev
+            </button>
+
+            <span>
+                Page ${currentPage} of ${totalPages}
+            </span>
+
+            <button onclick="nextPage()" ${currentPage===totalPages?'disabled':''}>
+                Next
+            </button>
+        </div>
+    `;
+
+    container.innerHTML = "<h3>Query Result</h3>" + html;
+}
+
+function nextPage() {
+
+    const totalPages =
+        Math.ceil(lastQueryData.length / rowsPerPage);
+
+    if (currentPage < totalPages) {
+
+        currentPage++;
+
+        renderTablePage();
+    }
+}
+
+function prevPage() {
+
+    if (currentPage > 1) {
+
+        currentPage--;
+
+        renderTablePage();
+    }
+}
       /* ================== CHART LOGIC ================== */
 
     /* ================== FIXED CHART LOGIC ================== */
@@ -765,36 +1007,27 @@ function renderChart(type) {
         document.getElementById("explanationModal").style.display = "none";
       }
       
-      window.onload = function() {
-    const queryToLoad = localStorage.getItem('pendingQuery');
-    if (queryToLoad) {
-        // IMPORTANT: Make sure your textarea has id="queryInput"
-        const textarea = document.getElementById('queryInput');
-        if (textarea) {
-            textarea.value = queryToLoad;
-            localStorage.removeItem('pendingQuery'); // Clear memory after loading
-        }
-    }
-};
+ 
 document.addEventListener("DOMContentLoaded", () => {
+
     const inputField = document.getElementById('userInput');
     
-    // Check all possible storage keys for a pending query
     const pending = localStorage.getItem('pendingQuery') || 
                     localStorage.getItem('selectedTemplateSQL') || 
                     localStorage.getItem("rerunQuery");
 
     if (pending && inputField) {
+
         inputField.value = pending;
-        
-        // Clear memory
+
         localStorage.removeItem('pendingQuery');
         localStorage.removeItem('selectedTemplateSQL');
         localStorage.removeItem("rerunQuery");
-        
-        // Auto-submit the query
-        handleSend(); 
+
+        // auto run query
+        handleSend();
     }
+
 });
 function logToHistory(question, sql) {
     let history = JSON.parse(localStorage.getItem("queryHistory")) || [];
@@ -820,40 +1053,56 @@ function logToHistory(question, sql) {
     document.getElementById("voiceLangModal").style.display = "none";
   }
 
-  function startVoiceInput(lang) {
-    closeVoiceModal();
+ function startVoiceInput(lang) {
 
-    if (!('webkitSpeechRecognition' in window)) {
-      alert("Voice input not supported in this browser. Use Chrome.");
-      return;
-    }
+  closeVoiceModal();
 
-    recognitionInstance = new webkitSpeechRecognition();
-    recognitionInstance.lang = lang;
-    recognitionInstance.continuous = false;
-    recognitionInstance.interimResults = false;
-
-    recognitionInstance.onstart = () => {
-      console.log("Listening...");
-    };
-
-    recognitionInstance.onresult = (event) => {
-      const voiceText = event.results[0][0].transcript;
-      console.log("Voice Input:", voiceText);
-
-      // Put text into existing input box
-      const inputField = document.getElementById("userInput");
-      inputField.value = voiceText;
-      inputField.focus();
-    };
-
-    recognitionInstance.onerror = (event) => {
-      console.error("Voice Error:", event.error);
-      alert("Voice recognition failed. Try again.");
-    };
-
-    recognitionInstance.start();
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("Voice input not supported in this browser. Use Chrome.");
+    return;
   }
+
+  recognitionInstance = new webkitSpeechRecognition();
+  recognitionInstance.lang = lang;
+  recognitionInstance.continuous = false;
+  recognitionInstance.interimResults = false;
+
+  recognitionInstance.onstart = () => {
+
+    // SHOW recording popup
+    document.getElementById("voiceRecordingModal").style.display = "flex";
+    document.getElementById("voiceStatusText").innerText = "Listening...";
+  };
+
+  recognitionInstance.onresult = (event) => {
+
+    const voiceText = event.results[0][0].transcript;
+
+    document.getElementById("userInput").value = voiceText;
+
+    stopVoiceInput();
+  };
+
+  recognitionInstance.onerror = () => {
+    stopVoiceInput();
+    alert("Voice recognition failed");
+  };
+
+  recognitionInstance.onend = () => {
+    stopVoiceInput();
+  };
+
+  recognitionInstance.start();
+}
+
+function stopVoiceInput() {
+
+  if (recognitionInstance) {
+    recognitionInstance.stop();
+  }
+
+  document.getElementById("voiceRecordingModal").style.display = "none";
+}
 
   // Close modal if user clicks outside
  document.addEventListener("DOMContentLoaded", function () {
@@ -948,6 +1197,8 @@ function downloadFile(content, filename, type) {
 
     link.click();
 }
+
+
     </script>
 
     
@@ -969,17 +1220,58 @@ function downloadFile(content, filename, type) {
   <div class="modal-card" onclick="event.stopPropagation()">
     <div class="modal-header">Select Voice Language</div>
 
-    <button class="option-btn" onclick="startVoiceInput('en-IN')">
-      English
-    </button>
-    <button class="option-btn" onclick="startVoiceInput('hi-IN')">
-      Hindi
-    </button>
-    <button class="option-btn" onclick="startVoiceInput('mr-IN')">
-      Marathi
-    </button>
+   <button class="option-btn" onclick="startVoiceInput('en-IN')">
+  English
+</button>
+
+<button class="option-btn" onclick="startVoiceInput('hi-IN')">
+  हिन्दी
+</button>
+
+<button class="option-btn" onclick="startVoiceInput('mr-IN')">
+  मराठी
+</button>
   </div>
 </div>
 
+<!-- Voice Recording Modal -->
+<div class="modal-overlay" id="voiceRecordingModal">
+  <div class="voice-record-card" onclick="event.stopPropagation()">
+
+    <div class="voice-icon">
+      <i class="ph ph-microphone"></i>
+    </div>
+
+    <div class="voice-text" id="voiceStatusText">
+      Listening...
+    </div>
+
+    <div class="voice-animation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <button class="voice-stop-btn" onclick="stopVoiceInput()">
+      Stop
+    </button>
+
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const pendingQuery = localStorage.getItem("pendingQuery");
+
+    if (pendingQuery) {
+        const inputBox = document.getElementById("queryInput");
+
+        if (inputBox) {
+            inputBox.value = pendingQuery;
+        }
+
+        localStorage.removeItem("pendingQuery");
+    }
+});
+</script>
   </body>
 </html>

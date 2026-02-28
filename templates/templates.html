@@ -135,11 +135,11 @@
 
       // This function captures the SQL from the template and sends it to the dashboard
 function handleUseQuery(sql) {
-    // 1. Save the SQL to localStorage
+    // Save SQL to localStorage
     localStorage.setItem('pendingQuery', sql);
-    
-    // 2. Redirect to the Ask AI (home) page
-    window.location.href = '/'; 
+
+    // Redirect to Ask AI page
+    window.location.href = '/ask_page';
 }
 
         // Deletes template from localStorage (For Real DB, you will change this to an API fetch)
@@ -191,15 +191,26 @@ function handleUseQuery(sql) {
                             <i class="ph ph-trash"></i> Delete
                         </button>
 
-                      <button onclick="handleUseQuery(\`${t.title.replace(/`/g, '\\`')}\` )" class="use-btn">
-                            <i class="ph ph-play-fill"></i> Use Template
-                             </button>
+                   <button class="use-btn" data-prompt="${encodeURIComponent(t.title)}" onclick="handleUseTemplate(this)">
+    <i class="ph ph-play-fill"></i> Use Template
+</button>
                     </div>
                 </div>
             `).join('');
         }
 
         window.onload = loadTemplates;
+
+      function handleUseTemplate(button) {
+
+    const prompt = decodeURIComponent(button.getAttribute("data-prompt"));
+
+    // Save PROMPT
+    localStorage.setItem("pendingQuery", prompt);
+
+    // Go to Ask AI page
+    window.location.href = "/ask_page";
+}
     </script>
 </body>
 </html>

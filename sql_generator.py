@@ -1,30 +1,37 @@
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL_NAME = "deepseek-coder:6.7b"
+MODEL_NAME = "phi3:mini"
 
 
 def generate_sql(prompt: str) -> str:
+
     payload = {
-    "model": MODEL_NAME,
-    "messages": [{"role": "user", "content": prompt}],
-    "stream": False,
-    "options": {
-        "temperature": 0
+        "model": MODEL_NAME,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "stream": False,
+        "options": {
+            "temperature": 0,
+            "num_predict": 120,
+            "num_ctx": 1024,     # faster
+            "num_thread": 8      # use CPU cores
+        }
     }
-}
 
     try:
         response = requests.post(
             OLLAMA_URL,
             json=payload,
-            timeout=60  # prevents hanging forever
+            timeout=60
         )
+
         response.raise_for_status()
 
         content = response.json()["message"]["content"].strip()
 
-        # ---- Remove accidental markdown formatting ----
+        # Remove markdown formatting
         if content.startswith("```"):
             content = content.replace("```sql", "")
             content = content.replace("```", "")

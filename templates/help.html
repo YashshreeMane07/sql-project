@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatSQL - Help & Tutorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    
+    <style>
+        :root {
+            --primary-green-dark: #0d4a33;
+            --primary-green-medium: #1e8f5b;
+            --primary-green-light: #d8f5e5;
+            --background-light: #f5f7f8;
+            --card-white: #ffffff;
+            --text-dark: #1a1d1f;
+            --text-gray: #777e90;
+            --border-light: #e6e8ec;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
+
+        /* Modified Header to accommodate removed search bar */
+        header {
+            display: flex;
+            justify-content: flex-end; /* Keeps profile aligned to the right */
+            padding: 15px 30px;
+            background: var(--card-white);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .avatar-circle {
+            width: 40px; height: 40px;
+            background-color: var(--primary-green-dark);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 14px; margin-left: 12px;
+            border: 2px solid var(--primary-green-light);
+        }
+
+        .help-container {
+            display: flex; flex-direction: column;
+            gap: 20px; padding: 20px 0 60px 0;
+            max-width: 1100px; margin: 0 auto;
+        }
+
+        /* TARGETED CHANGE: REDUCED TOP-TO-BOTTOM LENGTH */
+        .help-hero {
+            background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green-medium));
+            padding: 15px 25px; /* Vertical padding significantly reduced */
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px; 
+        }
+
+        .help-hero h1 { 
+            font-size: 20px; 
+            margin: 0; 
+            line-height: 1.2;
+        }
+
+        .help-hero p { 
+            font-size: 14px; 
+            margin: 2px 0 0 0; 
+            opacity: 0.9;
+        }
+
+        /* --- VIDEO SECTION --- */
+        .video-guide-section {
+            background: var(--card-white);
+            padding: 25px; border-radius: 16px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .video-container {
+            width: 100%; max-width: 800px; margin: 20px auto 0;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            background: #000; aspect-ratio: 16 / 9;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- HOW TO USE SECTION --- */
+        .how-to-section {
+            background: var(--card-white);
+            padding: 30px; border-radius: 16px;
+            border: 1px solid var(--border-light);
+        }
+
+        .steps-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px; margin-top: 20px;
+        }
+
+        .step-item { text-align: left; }
+        .step-number {
+            width: 32px; height: 32px;
+            background: var(--primary-green-light);
+            color: var(--primary-green-dark); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 10px; font-weight: 600;
+        }
+
+        .step-item h4 { margin-bottom: 5px; color: var(--text-dark); }
+        .step-item p { font-size: 13px; line-height: 1.5; color: var(--text-gray); }
+
+        /* --- TUTORIAL CARDS --- */
+        .tutorial-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tutorial-card {
+            background: var(--card-white); padding: 25px;
+            border-radius: 16px; border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-card i {
+            font-size: 28px; color: var(--primary-green-medium);
+            margin-bottom: 15px; display: block;
+        }
+
+        .tutorial-card h3 { font-size: 17px; margin-bottom: 10px; }
+        .tutorial-card p { font-size: 13px; line-height: 1.5; color: var(--text-gray); }
+
+        /* --- FAQ SECTION --- */
+        .faq-section {
+            background: var(--card-white); padding: 30px;
+            border-radius: 16px; border: 1px solid var(--border-light);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-light);
+            padding: 15px 0; cursor: pointer;
+        }
+
+        .faq-question {
+            font-weight: 500; color: var(--text-dark); font-size: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .faq-answer {
+            color: var(--text-gray); font-size: 13px;
+            margin-top: 10px; line-height: 1.5; display: none;
+        }
+
+        .user-name { color: var(--primary-green-dark); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+           <img src="sql_logo.png" alt="Logo" class="brand-logo-img" />
+        </div>
+        <div class="menu-label">MENU</div>
+        <ul class="nav-list">
+            <li class="nav-item" onclick="window.location.href='/overview'"><i class="ph ph-squares-four"></i> <span>Overview</span></li>
+            <li class="nav-item" onclick="window.location.href='/dashboard'"><i class="ph ph-sparkle"></i> <span>Ask AI</span></li>
+            <li class="nav-item" onclick="window.location.href='/history'"><i class="ph ph-clock-counter-clockwise"></i> <span>Query History</span></li>
+            <li class="nav-item" onclick="window.location.href='/templates_page'"><i class="ph ph-copy-simple"></i> <span>Templates</span></li>
+        </ul>
+        <div class="menu-label" style="margin-top: 20px">GENERAL</div>
+        <ul class="nav-list">
+            <li class="nav-item" onclick="window.location.href='/profile'"><i class="ph ph-user"></i><span>Profile</span></li>
+            <li class="nav-item active" onclick="window.location.href='/tutorial'"><i class="ph ph-book"></i><span>Help/Tutorial</span></li>
+            <li class="nav-item"><i class="ph ph-gear"></i><span>Settings</span></li>
+            <li class="nav-item" onclick="handleLogout()"><i class="ph ph-sign-out"></i><span>Logout</span></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name" id="session-name">Loading...</div>
+                        <div class="user-email" id="session-email" style="font-size: 12px; opacity: 0.7;">...</div>
+                    </div>
+                    <div class="avatar-circle" id="user-initials">--</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="help-container">
+                
+                <div class="help-hero">
+                    <h1>Master ChatSQL in Minutes</h1>
+                    <p>The bridge between your natural language and your database.</p>
+                </div>
+
+                <section class="video-guide-section">
+                    <h2 style="color: var(--primary-green-dark); font-size: 20px;">Video Walkthrough</h2>
+                    <div class="video-container">
+                        <video controls poster="https://via.placeholder.com/800x450?text=ChatSQL+Demo+Video">
+                            <source src="demo-video.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </section>
+
+                <section class="how-to-section">
+                    <h2 style="color: var(--primary-green-dark); font-size: 20px;">How to use</h2>
+                    <div class="steps-container">
+                        <div class="step-item">
+                            <div class="step-number">01</div>
+                            <h4>Connect</h4>
+                            <p>Ensure your database is linked via backend config.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">02</div>
+                            <h4>Type Query</h4>
+                            <p>Ask AI: "Show me sales from last month."</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">03</div>
+                            <h4>Execute</h4>
+                            <p>The AI writes SQL and fetches live data instantly.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">04</div>
+                            <h4>Analyze</h4>
+                            <p>Generate charts or Export reports.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="tutorial-grid">
+                    <div class="tutorial-card">
+                        <i class="ph ph-magic-wand"></i>
+                        <h3>NLP Engine</h3>
+                        <p>Ask for complex joins without knowing SQL code.</p>
+                    </div>
+                    <div class="tutorial-card">
+                        <i class="ph ph-chart-line-up"></i>
+                        <h3>Visualization</h3>
+                        <p>Switch between Bar, Line, and Pie charts with one click.</p>
+                    </div>
+                    <div class="tutorial-card">
+                        <i class="ph ph-shield-check"></i>
+                        <h3>Secure</h3>
+                        <p>Executed in a read-only environment. Data stays safe.</p>
+                    </div>
+                </div>
+
+                <div class="faq-section">
+                    <h2 style="margin-bottom: 20px; color: var(--primary-green-dark); font-size: 20px;">FAQs</h2>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">How accurate is the AI? <i class="ph ph-caret-down"></i></div>
+                        <div class="faq-answer">98% accurate for standard business queries.</div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">Which databases are supported? <i class="ph ph-caret-down"></i></div>
+                        <div class="faq-answer">MySQL, PostgreSQL, and SQL Server.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const session = JSON.parse(localStorage.getItem("userSession"));
+            if (!session || !session.name) {
+                window.location.href = "/login";
+                return;
+            }
+
+            const fullName = session.name.trim();
+            document.getElementById("session-name").innerText = fullName;
+            document.getElementById("session-email").innerText = session.email || "";
+
+            const nameParts = fullName.split(" ").filter(n => n.length > 0);
+            let initials = nameParts.length >= 2 ? nameParts[0][0] + nameParts[nameParts.length - 1][0] : nameParts[0][0];
+            document.getElementById("user-initials").innerText = initials.toUpperCase();
+        });
+
+        function toggleFaq(element) {
+            const answer = element.querySelector('.faq-answer');
+            const icon = element.querySelector('.ph-caret-down');
+            const isOpen = answer.style.display === "block";
+            
+            document.querySelectorAll('.faq-answer').forEach(ans => ans.style.display = "none");
+            document.querySelectorAll('.ph-caret-down').forEach(ic => ic.style.transform = "rotate(0deg)");
+
+            if (!isOpen) {
+                answer.style.display = "block";
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("userSession");
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+</html>
