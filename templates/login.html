@@ -184,18 +184,22 @@
 
 <script>
     // Logic remains identical to ensure functionality doesn't break
-   const session = localStorage.getItem("userSession");
+   const sessionData = localStorage.getItem("userSession");
 
-if (session) {
-    const user = JSON.parse(session);
+if (sessionData && sessionData !== "undefined") {
+    try {
+        const user = JSON.parse(sessionData);
 
-    if (user.role === "admin") {
-        window.location.href = "/admin_dashboard";
-    } else {
-        window.location.href = "/dashboard";
+        if (user && user.role === "admin") {
+            window.location.href = "/admin_dashboard";
+        } else if (user) {
+            window.location.href = "/dashboard";
+        }
+    } catch (e) {
+        console.log("Invalid session, clearing...");
+        localStorage.removeItem("userSession");
     }
 }
-
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const email = document.getElementById('email').value;
