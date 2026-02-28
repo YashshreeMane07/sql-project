@@ -1,0 +1,17 @@
+[33mcommit ed6ef4414d512c9186007e5880991686c5facdd9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Yashshree Mane <yashshreemane7@gmail.com>
+Date:   Sat Feb 28 00:24:52 2026 +0530
+
+    Describe what you changed
+
+[33mcommit fa40a7fcad47b91cc9b458f11bdb48bf461a066a[m
+Author: Yashshree Mane <yashshreemane7@gmail.com>
+Date:   Sat Feb 28 00:00:00 2026 +0530
+
+    Improved UI
+
+[33mcommit a165b14c4b479d91ee146d005a8390eab39f671f[m
+Author: Yashshree Mane <yashshreemane7@gmail.com>
+Date:   Fri Feb 27 20:55:34 2026 +0530
+
+    clean initial commit without venv
